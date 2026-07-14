@@ -15,8 +15,7 @@ export function asset(path: string): string {
 }
 
 // ─── Публичный адрес сайта ───────────────────────────────────────────────────
-// TODO: замените <username> на реальный аккаунт GitHub (или на свой домен).
-export const SITE_URL = "https://USERNAME.github.io/balovnev-system";
+export const SITE_URL = "https://Hentard21.github.io/balovnev-system";
 
 // ─── Контакты и соцсети ──────────────────────────────────────────────────────
 // TODO: заменить все ссылки на реальные перед запуском.

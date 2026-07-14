@@ -1,0 +1,7 @@
+# TODO: замените USERNAME на реальный аккаунт GitHub (или свой домен)
+User-agent: *
+Allow: /
+Disallow: /privacy/
+Disallow: /oferta/
+
+Sitemap: https://USERNAME.github.io/balovnev-system/sitemap.xml

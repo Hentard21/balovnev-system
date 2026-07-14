@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+/* ============================================================
+   ДИЗАЙН-СИСТЕМА: Игорь Баловнев — Carbon / Energy Orange
+   (по рекомендации ui-ux-pro-max: Dark OLED + палитра Fitness/Gym)
+   Карбоново-чёрный фон, единственный акцент — энергетический оранжевый.
+   Дисплейный шрифт Sofia Sans Condensed + текстовый Sofia Sans.
+   ============================================================ */
+
+@theme inline {
+  /* --- Фоны --- */
+  --color-deep:    #0b0d10;   /* Главный фон страницы — карбон */
+  --color-surface: #101114;   /* Поверхность секций */
+  --color-card:    #16181c;   /* Фон карточек */
+
+  /* --- Энерго-оранжевый акцент (единственный) --- */
+  --color-accent:       #f97316;
+  --color-accent-light: #fb923c;
+  --color-accent-dim:   rgb(249 115 22 / 0.08);
+
+  /* --- Текст (строгая иерархия) --- */
+  --color-txt-1: #f4f5f0;   /* Основной — тёплый белый */
+  --color-txt-2: #9ba0a6;   /* Вторичный — серый */
+  --color-txt-3: #575c62;   /* Замолчавший — плейсхолдеры */
+
+  /* --- Границы --- */
+  --color-rim:        rgb(255 255 255 / 0.08);
+  --color-rim-accent: rgb(249 115 22 / 0.28);
+
+  /* --- Шрифты --- */
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* --- Базовые стили --- */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-deep);
+  color: var(--color-txt-1);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Дисплейная типографика: заголовки набираются Sofia Sans Condensed */
+h1, h2, h3, .font-display {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+  letter-spacing: 0.005em;
+  font-weight: 700;
+}
+
+/* --- Карточки: плоские тёмные поверхности (вместо glassmorphism) --- */
+.glass {
+  background: var(--color-card);
+  border: 1px solid var(--color-rim);
+}
+
+.glass-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-rim);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: var(--color-rim-accent);
+  box-shadow: 0 0 32px rgb(249 115 22 / 0.05);
+}
+
+/* --- Градиентный текст (оранж) --- */
+.text-accent-gradient {
+  background: linear-gradient(135deg, #f97316 0%, #fb923c 60%, #f97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Кнопка-призыв (оранж, пилюля) --- */
+.btn-accent {
+  background: var(--color-accent);
+  color: #14100a;
+  font-weight: 700;
+  border-radius: 9999px;
+  transition: filter 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.btn-accent:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 0 28px rgb(249 115 22 / 0.35);
+}
+.btn-accent:active { transform: scale(0.98); }
+
+/* --- Кнопка-призыв (ghost, пилюля) --- */
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--color-rim);
+  color: var(--color-txt-1);
+  border-radius: 9999px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn-ghost:hover {
+  background: rgb(255 255 255 / 0.06);
+  border-color: var(--color-rim-accent);
+}
+.btn-ghost:active { transform: scale(0.98); }
+
+/* --- Скроллбар --- */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--color-deep); }
+::-webkit-scrollbar-thumb { background: #26282d; border-radius: 3px; }
+
+/* ============================================================
+   СВЕТЛАЯ ТЕМА — бумажно-белый + жжёный оранжевый
+   ============================================================ */
+[data-theme="light"] {
+  --color-deep:    #f6f7f2;   /* Главный фон — тёплая бумага */
+  --color-surface: #ffffff;   /* Поверхность секций */
+  --color-card:    #ffffff;   /* Карточки */
+
+  --color-accent:       #c2410c;
+  --color-accent-light: #ea580c;
+  --color-accent-dim:   rgb(194 65 12 / 0.08);
+
+  --color-txt-1: #16181a;   /* Основной текст — почти чёрный */
+  --color-txt-2: #4f555c;   /* Вторичный */
+  --color-txt-3: #8a9096;   /* Замолчавший */
+
+  --color-rim:        rgb(0 0 0 / 0.08);
+  --color-rim-accent: rgb(194 65 12 / 0.30);
+}
+
+[data-theme="light"] .glass,
+[data-theme="light"] .glass-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-rim);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.04);
+}
+
+[data-theme="light"] .glass-card:hover {
+  border-color: var(--color-rim-accent);
+  box-shadow: 0 4px 24px rgb(194 65 12 / 0.10);
+}
+
+[data-theme="light"] .text-accent-gradient {
+  background: linear-gradient(135deg, #c2410c 0%, #ea580c 60%, #c2410c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="light"] .btn-accent {
+  background: #ea580c;
+  color: #ffffff;
+}
+[data-theme="light"] .btn-accent:hover {
+  box-shadow: 0 4px 24px rgb(234 88 12 / 0.35);
+}
+
+[data-theme="light"] .btn-ghost {
+  background: transparent;
+  border: 1px solid rgb(0 0 0 / 0.12);
+  color: var(--color-txt-1);
+}
+[data-theme="light"] .btn-ghost:hover {
+  background: rgb(0 0 0 / 0.04);
+  border-color: var(--color-rim-accent);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track { background: #f6f7f2; }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: #d1d5db; }

@@ -30,11 +30,17 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        # npm ci требует, чтобы package-lock.json был идентичен тому, что
+        # сгенерировал бы npm install на этой же платформе — опциональные
+        # нативные пакеты (Tailwind v4 / lightningcss) регистрируются
+        # по-разному на macOS и Linux, поэтому строгий ci ложно падает
+        # в CI, даже если сборка чиста локально. npm install терпимее
+        # к этому, оставаясь детерминированным по package.json.
+        run: npm install
 
       - name: Build static site
         run: npm run build

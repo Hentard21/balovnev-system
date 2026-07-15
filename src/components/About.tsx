@@ -43,7 +43,7 @@ export default function About() {
             <div className="relative glass-card rounded-2xl lg:rounded-3xl overflow-hidden aspect-[3/4] max-w-[220px] sm:max-w-sm mx-auto lg:mx-0">
               <img
                 src={asset("/photo2/champion-with-medal.jpg")}
-                alt="Игорь Баловнев — чемпион с медалью"
+                alt="Игорь Баловнев — чемпион России с медалью"
                 className="absolute inset-0 w-full h-full object-cover object-center"
                 loading="lazy"
               />

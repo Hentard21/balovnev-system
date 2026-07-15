@@ -21,10 +21,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      # Сайт живёт в подпапке репозитория: https://<user>.github.io/balovnev-system/
-      # При переезде на собственный домен удалите эту строку.
-      NEXT_PUBLIC_BASE_PATH: /balovnev-system
+    # Сайт живёт на собственном домене (balovnev-system.ru, см. public/CNAME)
+    # и отдаётся с корня — basePath не нужен, поэтому NEXT_PUBLIC_BASE_PATH
+    # намеренно не задаётся (next.config.ts трактует его отсутствие как "").
     steps:
       - uses: actions/checkout@v4
 

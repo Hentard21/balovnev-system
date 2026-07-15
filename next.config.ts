@@ -1,13 +1,12 @@
 import type { NextConfig } from "next";
 
 // ─── Статический экспорт для GitHub Pages ────────────────────────────────────
-// Репозиторий: balovnev-system → сайт живёт по адресу
-// https://<username>.github.io/balovnev-system/
+// Сайт живёт на собственном домене https://balovnev-system.ru (см. public/CNAME)
+// и отдаётся с корня, поэтому basePath пуст по умолчанию.
 //
-// basePath подставляется только при сборке в CI (см. .github/workflows/deploy.yml,
-// там выставляется NEXT_PUBLIC_BASE_PATH=/balovnev-system).
-// Локальная разработка (npm run dev) работает без префикса.
-// При переезде на собственный домен просто уберите env из workflow.
+// Если домен когда-нибудь отвяжут и сайт вернётся на путь вида
+// <username>.github.io/balovnev-system/, задайте в workflow
+// NEXT_PUBLIC_BASE_PATH=/balovnev-system — код подхватит его автоматически.
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 const nextConfig: NextConfig = {

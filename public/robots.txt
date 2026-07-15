@@ -3,4 +3,4 @@ Allow: /
 Disallow: /privacy/
 Disallow: /oferta/
 
-Sitemap: https://Hentard21.github.io/balovnev-system/sitemap.xml
+Sitemap: https://balovnev-system.ru/sitemap.xml

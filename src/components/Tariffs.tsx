@@ -1,84 +1,116 @@
+"use client";
+
 // ─── Блок 5: Тарифные планы ─────────────────────────────────────────────────
 
 interface Tariff {
   badge: string;
-  badgeStyle: "neutral" | "gold" | "urgent";
+  badgeStyle: "neutral" | "gold";
   title: string;
   subtitle: string;
   forWhom: string;
   perks: string[];
-  priceCrossed?: string;
   price: string;
   period?: string;
   cta: string;
   featured?: boolean;
 }
 
-const TARIFFS: Tariff[] = [
+// Разовые продукты — покупаются один раз, без ежемесячного сопровождения
+const ONE_TIME_TARIFFS: Tariff[] = [
   {
-    badge: "Скоро",
+    badge: "Разовая оплата",
     badgeStyle: "neutral",
-    title: "База",
-    subtitle: "Курс видеолекций",
+    title: "Тренировочный план",
+    subtitle: "Программа на месяц",
     forWhom:
-      "Для тех, кто привык тренироваться автономно, но хочет закрыть пробелы в знаниях и биомеханике.",
+      "Для тех, кто хочет тренироваться самостоятельно по чёткой системе, без личного сопровождения тренера.",
     perks: [
-      "Доступ к закрытой библиотеке видеоуроков от Игоря Баловнева",
-      "Детальный разбор техники выполнения базовых и изолированных упражнений",
-      "Методология построения сбалансированного рациона питания",
-      "Основы спортивной нутрицевтики и минимизации травматизма",
+      "Программа тренировок на 4 недели под твой уровень и цель",
+      "Подбор упражнений и нагрузки под доступный инвентарь",
+      "Готовый план — занимаешься в своём темпе",
     ],
-    priceCrossed: "5 990 ₽",
-    price: "—",
-    cta: "Узнать о старте первым",
+    price: "7 000 ₽",
+    cta: "Заказать план",
   },
   {
-    badge: "Хит продаж",
-    badgeStyle: "gold",
-    title: "Абсолютный Чемпион",
-    subtitle: "Персональное онлайн-ведение",
+    badge: "Разовая оплата",
+    badgeStyle: "neutral",
+    title: "План с видеообзором техники",
+    subtitle: "Для самостоятельных тренировок",
     forWhom:
-      "Бескомпромиссное ведение до результата из любой точки мира. Идеально для подготовки к соревнованиям и создания топовой формы «для себя».",
+      "Тот же тренировочный план, но с разбором техники каждого упражнения на видео — чтобы не гадать, правильно ли выполняешь движение.",
     perks: [
-      "Индивидуальный тренировочный план и стратегия питания под твои цели",
-      "Полный доступ к ИИ-экосистеме (Mini App, трекеры, автоматические графики)",
-      "Глубокий разбор анализов крови и составление плана БАД/витаминов",
-      "Еженедельный контроль отчетов и оперативные корректировки",
-      "Консультации и видеоразборы техники упражнений",
-      "Прямой закрытый чат с Игорем Баловневым",
+      "Тренировочный план на месяц",
+      "Видеообзор техники выполнения каждого упражнения",
+      "Идеально, если нет возможности заниматься с тренером очно",
     ],
-    priceCrossed: "20 000 ₽",
-    price: "15 000 ₽",
-    period: "/ месяц",
-    cta: "Занять слот на ведение",
-    featured: true,
+    price: "10 000 ₽",
+    cta: "Заказать план",
   },
   {
-    badge: "Осталось 2 места",
-    badgeStyle: "urgent",
-    title: "Гран-при Pro",
-    subtitle: "Очный тренинг в Краснодаре",
+    badge: "Разовая оплата",
+    badgeStyle: "neutral",
+    title: "План питания",
+    subtitle: "3–4 варианта меню",
     forWhom:
-      "Премиальный формат для тех, кому необходим тотальный контроль face-to-face и личное менторство чемпиона России.",
+      "Несколько вариантов меню с вариацией продуктов — можно менять блюда местами без потери баланса БЖУ.",
     perks: [
-      "Включает ВСЕ опции тарифа «Абсолютный Чемпион»",
-      "3 персональные тренировки в неделю под личным присмотром Игоря",
-      "Длительность каждой сессии — от 1.5 до 2 часов",
-      "Постановка соревновательного позирования и сценического образа",
-      "Локация: премиальный тренажерный зал в г. Краснодар",
+      "3–4 готовых плана меню под твою цель",
+      "Вариации продуктов под пищевые предпочтения",
+      "База рецептов регулярно пополняется",
     ],
-    price: "20 000 ₽",
-    period: "/ месяц",
-    cta: "Забронировать место",
+    price: "7 000 ₽",
+    cta: "Заказать план питания",
   },
 ];
+
+// Персональное ведение — ежемесячное сопровождение с обратной связью
+const COACHING_TARIFFS: Tariff[] = [
+  {
+    badge: "Ежемесячно",
+    badgeStyle: "neutral",
+    title: "Дистанционное ведение",
+    subtitle: "Тренировки + питание",
+    forWhom:
+      "Комплекс тренировок для зала и индивидуальный план питания с сопровождением на протяжении месяца.",
+    perks: [
+      "Комплекс тренировок для зала под твою цель",
+      "Индивидуальный план питания",
+      "Корректировки плана по ходу месяца",
+    ],
+    price: "11 000 ₽",
+    period: "/ месяц",
+    cta: "Оставить заявку",
+  },
+  {
+    badge: "Максимум сопровождения",
+    badgeStyle: "gold",
+    title: "Подготовка к соревнованиям «Под ключ»",
+    subtitle: "Позирование + БАДы + ведение",
+    forWhom:
+      "Полное сопровождение к сцене: тренировки, питание, позирование и подбор добавок под контролем тренера.",
+    perks: [
+      "Всё из тарифа «Дистанционное ведение»",
+      "Постановка соревновательного позирования",
+      "Ведение по БАДам и витаминам",
+      "Полное сопровождение до соревнований",
+    ],
+    price: "15 000 ₽",
+    period: "/ месяц",
+    cta: "Занять слот на подготовку",
+    featured: true,
+  },
+];
+
+function scrollToContact() {
+  document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
 // ─── Бейдж ──────────────────────────────────────────────────────────────────
 function Badge({ text, style }: { text: string; style: Tariff["badgeStyle"] }) {
   const styles: Record<string, string> = {
     neutral: "bg-white/[0.06] text-txt-2 border border-white/[0.08]",
     gold: "border text-gold animate-badge-glow",
-    urgent: "bg-white/[0.06] text-txt-2 border border-white/[0.08]",
   };
 
   return (
@@ -146,6 +178,102 @@ function Check({ featured }: { featured?: boolean }) {
   );
 }
 
+// ─── Карточка тарифа ────────────────────────────────────────────────────────
+function TariffCard({ t }: { t: Tariff }) {
+  return (
+    <div
+      className="glass-card rounded-2xl p-6 flex flex-col gap-5 relative"
+      style={
+        t.featured
+          ? {
+              borderColor: "var(--color-rim-accent)",
+              boxShadow: "0 0 40px rgb(249 115 22 / 0.08), inset 0 0 40px rgb(249 115 22 / 0.03)",
+            }
+          : undefined
+      }
+    >
+      {/* Золотая полоса сверху у премиального тарифа */}
+      {t.featured && (
+        <div
+          className="absolute -top-px left-6 right-6 h-px rounded-full"
+          style={{ background: "linear-gradient(90deg, transparent, var(--color-accent), transparent)" }}
+        />
+      )}
+
+      {/* Бейдж + название */}
+      <div className="flex flex-col gap-3">
+        <Badge text={t.badge} style={t.badgeStyle} />
+        <div>
+          <p
+            className="text-[10px] font-semibold tracking-[0.12em] uppercase mb-1"
+            style={{ color: "var(--color-txt-3)" }}
+          >
+            {t.subtitle}
+          </p>
+          <h3
+            className="text-xl font-bold leading-snug"
+            style={
+              t.featured
+                ? {
+                    background: "linear-gradient(135deg, #f97316 0%, #fb923c 60%, #f97316 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }
+                : { color: "var(--color-txt-1)" }
+            }
+          >
+            {t.title}
+          </h3>
+        </div>
+      </div>
+
+      {/* Для кого */}
+      <p className="text-sm leading-relaxed" style={{ color: "var(--color-txt-2)" }}>
+        {t.forWhom}
+      </p>
+
+      {/* Список преимуществ */}
+      <ul className="flex flex-col gap-2.5">
+        {t.perks.map((perk) => (
+          <li key={perk} className="flex items-start gap-2.5">
+            <Check featured={t.featured} />
+            <span className="text-sm leading-snug" style={{ color: "var(--color-txt-2)" }}>
+              {perk}
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      {/* Цена + кнопка */}
+      <div className="mt-auto pt-4 border-t flex flex-col gap-4" style={{ borderColor: "var(--color-rim)" }}>
+        <div className="flex items-baseline gap-2 flex-wrap">
+          <span
+            className="text-2xl font-bold"
+            style={t.featured ? { color: "var(--color-accent-light)" } : { color: "var(--color-txt-1)" }}
+          >
+            {t.price}
+          </span>
+          {t.period && (
+            <span className="text-sm" style={{ color: "var(--color-txt-2)" }}>
+              {t.period}
+            </span>
+          )}
+        </div>
+
+        <button
+          onClick={scrollToContact}
+          className={`w-full px-5 py-3 rounded-xl text-sm font-semibold transition-all ${
+            t.featured ? "btn-accent" : "btn-ghost"
+          }`}
+        >
+          {t.cta}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ─── Основной компонент ─────────────────────────────────────────────────────
 export default function Tariffs() {
   return (
@@ -163,7 +291,7 @@ export default function Tariffs() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Шапка */}
-        <div className="mb-14">
+        <div className="mb-10">
           <p
             className="text-xs font-semibold tracking-[0.18em] uppercase mb-3"
             style={{ color: "var(--color-accent)" }}
@@ -175,104 +303,29 @@ export default function Tariffs() {
           </h2>
         </div>
 
-        {/* Сетка карточек */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
-          {TARIFFS.map((t) => (
-            <div
-              key={t.title}
-              className="glass-card rounded-2xl p-6 flex flex-col gap-5 relative"
-              style={
-                t.featured
-                  ? {
-                      borderColor: "var(--color-rim-accent)",
-                      boxShadow: "0 0 40px rgb(249 115 22 / 0.08), inset 0 0 40px rgb(249 115 22 / 0.03)",
-                    }
-                  : undefined
-              }
-            >
-              {/* Золотая точка "Хит продаж" */}
-              {t.featured && (
-                <div
-                  className="absolute -top-px left-6 right-6 h-px rounded-full"
-                  style={{ background: "linear-gradient(90deg, transparent, var(--color-accent), transparent)" }}
-                />
-              )}
+        {/* Разовые продукты */}
+        <p
+          className="text-xs font-semibold tracking-[0.12em] uppercase mb-4"
+          style={{ color: "var(--color-txt-3)" }}
+        >
+          Разовые продукты
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start mb-14">
+          {ONE_TIME_TARIFFS.map((t) => (
+            <TariffCard key={t.title} t={t} />
+          ))}
+        </div>
 
-              {/* Бейдж + название */}
-              <div className="flex flex-col gap-3">
-                <Badge text={t.badge} style={t.badgeStyle} />
-                <div>
-                  <p
-                    className="text-[10px] font-semibold tracking-[0.12em] uppercase mb-1"
-                    style={{ color: "var(--color-txt-3)" }}
-                  >
-                    {t.subtitle}
-                  </p>
-                  <h3
-                    className="text-xl font-bold"
-                    style={
-                      t.featured
-                        ? {
-                            background: "linear-gradient(135deg, #f97316 0%, #fb923c 60%, #f97316 100%)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                            backgroundClip: "text",
-                          }
-                        : { color: "var(--color-txt-1)" }
-                    }
-                  >
-                    {t.title}
-                  </h3>
-                </div>
-              </div>
-
-              {/* Для кого */}
-              <p className="text-sm leading-relaxed" style={{ color: "var(--color-txt-2)" }}>
-                {t.forWhom}
-              </p>
-
-              {/* Список преимуществ */}
-              <ul className="flex flex-col gap-2.5">
-                {t.perks.map((perk) => (
-                  <li key={perk} className="flex items-start gap-2.5">
-                    <Check featured={t.featured} />
-                    <span className="text-sm leading-snug" style={{ color: "var(--color-txt-2)" }}>
-                      {perk}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* Цена + кнопка */}
-              <div className="mt-auto pt-4 border-t flex flex-col gap-4" style={{ borderColor: "var(--color-rim)" }}>
-                <div className="flex items-baseline gap-2 flex-wrap">
-                  {t.priceCrossed && (
-                    <span className="text-sm line-through" style={{ color: "var(--color-txt-3)" }}>
-                      {t.priceCrossed}
-                    </span>
-                  )}
-                  <span
-                    className="text-2xl font-bold"
-                    style={t.featured ? { color: "var(--color-accent-light)" } : { color: "var(--color-txt-1)" }}
-                  >
-                    {t.price}
-                  </span>
-                  {t.period && (
-                    <span className="text-sm" style={{ color: "var(--color-txt-2)" }}>
-                      {t.period}
-                    </span>
-                  )}
-                </div>
-
-                <button
-                  className={`w-full px-5 py-3 rounded-xl text-sm font-semibold transition-all ${
-                    t.featured ? "btn-accent" : "btn-ghost"
-                  }`}
-                >
-                  {t.cta}
-                </button>
-              </div>
-            </div>
+        {/* Персональное ведение */}
+        <p
+          className="text-xs font-semibold tracking-[0.12em] uppercase mb-4"
+          style={{ color: "var(--color-txt-3)" }}
+        >
+          Персональное ведение
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
+          {COACHING_TARIFFS.map((t) => (
+            <TariffCard key={t.title} t={t} />
           ))}
         </div>
       </div>

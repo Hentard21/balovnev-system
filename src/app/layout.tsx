@@ -67,14 +67,32 @@ const jsonLd = {
   makesOffer: [
     {
       "@type": "Offer",
-      name: "Абсолютный Чемпион — персональное онлайн-ведение",
-      price: "15000",
+      name: "Тренировочный план на месяц",
+      price: "7000",
       priceCurrency: "RUB",
     },
     {
       "@type": "Offer",
-      name: "Гран-при Pro — очный тренинг в Краснодаре",
-      price: "20000",
+      name: "План с видеообзором техники",
+      price: "10000",
+      priceCurrency: "RUB",
+    },
+    {
+      "@type": "Offer",
+      name: "План питания",
+      price: "7000",
+      priceCurrency: "RUB",
+    },
+    {
+      "@type": "Offer",
+      name: "Дистанционное ведение — тренировки и питание",
+      price: "11000",
+      priceCurrency: "RUB",
+    },
+    {
+      "@type": "Offer",
+      name: "Подготовка к соревнованиям «Под ключ»",
+      price: "15000",
       priceCurrency: "RUB",
     },
   ],

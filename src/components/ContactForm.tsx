@@ -10,8 +10,10 @@ type Goal = "" | "shape" | "competition";
 
 interface FormState {
   name: string;
+  age: string;
   contact: string;
   goal: Goal;
+  health: string;
 }
 
 const GOAL_LABELS: Record<Exclude<Goal, "">, string> = {
@@ -19,14 +21,28 @@ const GOAL_LABELS: Record<Exclude<Goal, "">, string> = {
   competition: "Подготовка к соревнованиям",
 };
 
+const inputStyle = {
+  background: "rgb(255 255 255 / 0.04)",
+  border: "1px solid var(--color-rim)",
+  color: "var(--color-txt-1)",
+} as const;
+
+const focusHandlers = {
+  onFocus: (e: React.FocusEvent<HTMLElement>) => (e.currentTarget.style.borderColor = "var(--color-rim-accent)"),
+  onBlur: (e: React.FocusEvent<HTMLElement>) => (e.currentTarget.style.borderColor = "var(--color-rim)"),
+};
+
 // ─── Компонент ──────────────────────────────────────────────────────────────
 export default function ContactForm() {
-  const [form, setForm] = useState<FormState>({ name: "", contact: "", goal: "" });
+  const [form, setForm] = useState<FormState>({ name: "", age: "", contact: "", goal: "", health: "" });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const isValid = form.name.trim() && form.contact.trim() && form.goal;
+  // Возраст и состояние здоровья тренер запрашивает для составления
+  // безопасного плана тренировок — поэтому возраст обязателен, а здоровье
+  // не блокирует отправку (у части людей действительно нет ограничений).
+  const isValid = form.name.trim() && form.age.trim() && form.contact.trim() && form.goal;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -46,8 +62,10 @@ export default function ContactForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name.trim(),
+          age: form.age.trim(),
           contact: form.contact.trim(),
           goal: form.goal ? GOAL_LABELS[form.goal as Exclude<Goal, "">] : "",
+          health: form.health.trim(),
           source: "site",
         }),
       });
@@ -154,13 +172,28 @@ export default function ContactForm() {
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all placeholder-txt-3"
-                style={{
-                  background: "rgb(255 255 255 / 0.04)",
-                  border: "1px solid var(--color-rim)",
-                  color: "var(--color-txt-1)",
-                }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = "var(--color-rim-accent)")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "var(--color-rim)")}
+                style={inputStyle}
+                {...focusHandlers}
+                required
+              />
+            </div>
+
+            {/* Поле: возраст */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium" style={{ color: "var(--color-txt-2)" }}>
+                Возраст
+              </label>
+              <input
+                type="number"
+                inputMode="numeric"
+                min={10}
+                max={100}
+                placeholder="28"
+                value={form.age}
+                onChange={(e) => setForm((f) => ({ ...f, age: e.target.value }))}
+                className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all placeholder-txt-3"
+                style={inputStyle}
+                {...focusHandlers}
                 required
               />
             </div>
@@ -176,13 +209,8 @@ export default function ContactForm() {
                 value={form.contact}
                 onChange={(e) => setForm((f) => ({ ...f, contact: e.target.value }))}
                 className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all"
-                style={{
-                  background: "rgb(255 255 255 / 0.04)",
-                  border: "1px solid var(--color-rim)",
-                  color: "var(--color-txt-1)",
-                }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = "var(--color-rim-accent)")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "var(--color-rim)")}
+                style={inputStyle}
+                {...focusHandlers}
                 required
               />
             </div>
@@ -196,13 +224,8 @@ export default function ContactForm() {
                 value={form.goal}
                 onChange={(e) => setForm((f) => ({ ...f, goal: e.target.value as Goal }))}
                 className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all appearance-none"
-                style={{
-                  background: "rgb(255 255 255 / 0.04)",
-                  border: "1px solid var(--color-rim)",
-                  color: form.goal ? "var(--color-txt-1)" : "var(--color-txt-3)",
-                }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = "var(--color-rim-accent)")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "var(--color-rim)")}
+                style={{ ...inputStyle, color: form.goal ? "var(--color-txt-1)" : "var(--color-txt-3)" }}
+                {...focusHandlers}
                 required
               >
                 {/* Фон опций наследует тему через CSS-переменную,
@@ -217,6 +240,27 @@ export default function ContactForm() {
                   Подготовка к соревнованиям
                 </option>
               </select>
+            </div>
+
+            {/* Поле: здоровье и ограничения */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium" style={{ color: "var(--color-txt-2)" }}>
+                Травмы, хронические заболевания, ограничения{" "}
+                <span style={{ color: "var(--color-txt-3)" }}>(необязательно)</span>
+              </label>
+              <textarea
+                rows={3}
+                placeholder="Например: травма плеча, повышенное давление — или «ограничений нет»"
+                value={form.health}
+                onChange={(e) => setForm((f) => ({ ...f, health: e.target.value }))}
+                className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all resize-none placeholder-txt-3"
+                style={inputStyle}
+                {...focusHandlers}
+              />
+              <p className="text-xs" style={{ color: "var(--color-txt-3)" }}>
+                Помогает Игорю сразу составить безопасный план: сердце, давление,
+                суставы, травмы — всё важно.
+              </p>
             </div>
 
             {/* Кнопка отправки */}

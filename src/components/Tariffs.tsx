@@ -182,7 +182,7 @@ function Check({ featured }: { featured?: boolean }) {
 function TariffCard({ t }: { t: Tariff }) {
   return (
     <div
-      className="glass-card rounded-2xl p-6 flex flex-col gap-5 relative"
+      className="glass-card rounded-2xl p-6 flex flex-col gap-5 relative h-full"
       style={
         t.featured
           ? {
@@ -310,7 +310,7 @@ export default function Tariffs() {
         >
           Разовые продукты
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start mb-14">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch mb-14">
           {ONE_TIME_TARIFFS.map((t) => (
             <TariffCard key={t.title} t={t} />
           ))}
@@ -323,7 +323,7 @@ export default function Tariffs() {
         >
           Персональное ведение
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
           {COACHING_TARIFFS.map((t) => (
             <TariffCard key={t.title} t={t} />
           ))}

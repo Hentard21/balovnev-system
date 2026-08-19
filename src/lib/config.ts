@@ -35,12 +35,12 @@ export const CONTACTS = {
 //      POST JSON {name, contact, goal} и пересылающий сообщение тренеру.
 //   2. Formspree/Formcarry: создайте форму и вставьте их URL сюда.
 // Пока endpoint пустой — форма показывает кнопки прямой связи (Telegram/WhatsApp).
-export const FORM_ENDPOINT = ""; // ← вставить URL вебхука, когда бот будет готов
+export const FORM_ENDPOINT = "https://formspree.io/f/xppakqry";
 
 // ─── Аналитика ───────────────────────────────────────────────────────────────
 // TODO: создайте счётчик на https://metrika.yandex.ru и впишите его номер.
 // Пока пусто — счётчик не подключается.
-export const YANDEX_METRIKA_ID = ""; // например "99999999"
+export const YANDEX_METRIKA_ID = "111759825";
 
 // ─── Скидка ──────────────────────────────────────────────────────────────────
 export const DISCOUNT_PERCENT = 25;

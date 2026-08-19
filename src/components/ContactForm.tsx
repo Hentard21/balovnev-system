@@ -59,7 +59,11 @@ export default function ContactForm() {
     try {
       const res = await fetch(FORM_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          // Formspree: без этого заголовка сервис вернёт HTML вместо JSON.
+          Accept: "application/json",
+        },
         body: JSON.stringify({
           name: form.name.trim(),
           age: form.age.trim(),

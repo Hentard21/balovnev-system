@@ -30,5 +30,7 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "miniapp"]
+  // functions/ собирает Cloudflare Pages, а не Next — у неё свой tsconfig
+  // с воркерными типами (см. functions/tsconfig.json).
+  "exclude": ["node_modules", "miniapp", "functions"]
 }

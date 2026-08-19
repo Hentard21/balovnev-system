@@ -75,7 +75,7 @@ export default function SocialLinks({ variant = "row" }: { variant?: Variant }) 
 
   return (
     <div className={s.wrapper}>
-      {SOCIALS.map((social) => (
+      {SOCIALS.filter((social) => social.href).map((social) => (
         <a
           key={social.label}
           href={social.href}

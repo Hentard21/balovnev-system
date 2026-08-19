@@ -109,7 +109,7 @@ function BentoCard({
         className="text-3xl sm:text-6xl font-bold tracking-tight text-accent-gradient block"
         initial={{ opacity: 0, y: 20 }}
         animate={started ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
       >
         {count}
         {suffix}
@@ -121,7 +121,7 @@ function BentoCard({
         style={{ color: "var(--color-txt-2)" }}
         initial={{ opacity: 0, y: 10 }}
         animate={started ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+        transition={{ duration: 0.6, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
       >
         {label}
       </motion.span>

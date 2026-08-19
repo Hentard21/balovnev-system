@@ -21,7 +21,7 @@
   /* --- Текст (строгая иерархия) --- */
   --color-txt-1: #f4f5f0;   /* Основной — тёплый белый */
   --color-txt-2: #9ba0a6;   /* Вторичный — серый */
-  --color-txt-3: #575c62;   /* Замолчавший — плейсхолдеры */
+  --color-txt-3: #7d848b;   /* Замолчавший — доступный серый */
 
   /* --- Границы --- */
   --color-rim:        rgb(255 255 255 / 0.08);
@@ -37,6 +37,14 @@ html {
   scroll-behavior: smooth;
 }
 
+/* --- Токены движения (кривые Emil Kowalski, Motion-скилл) --- */
+/* Встроенные CSS-easing слишком слабые; используем сильные кривые как единую
+   систему для всех переходов и framer-анимаций (там — как cubic-bezier массив). */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);      /* вход/выход, ховеры */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);  /* перемещение на экране */
+}
+
 body {
   background: var(--color-deep);
   color: var(--color-txt-1);
@@ -45,11 +53,26 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Дисплейная типографика: заголовки набираются Sofia Sans Condensed */
-h1, h2, h3, .font-display {
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Дисплейная типографика: крупные заголовки (H1 героя, H2 секций) набираются
+   Sofia Sans Condensed — атлетичный, «плакатный» характер. Заголовки карточек
+   (H3, малые кегли) остаются в обычном Sofia Sans: кондансед на 16–20px читается
+   «сжато», а обычная ширина держит опрятность на мелком уровне. Явный
+   .font-display оставляет за собой кондансед где нужно (номера, словомарка). */
+h1, h2, .font-display {
   font-family: var(--font-display), var(--font-body), sans-serif;
   letter-spacing: 0.005em;
   font-weight: 700;
+}
+
+h3 {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: normal;
 }
 
 /* --- Карточки: плоские тёмные поверхности (вместо glassmorphism) --- */
@@ -61,7 +84,7 @@ h1, h2, h3, .font-display {
 .glass-card {
   background: var(--color-card);
   border: 1px solid var(--color-rim);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
 }
 
 .glass-card:hover {
@@ -83,7 +106,7 @@ h1, h2, h3, .font-display {
   color: #14100a;
   font-weight: 700;
   border-radius: 9999px;
-  transition: filter 0.2s, transform 0.15s, box-shadow 0.2s;
+  transition: filter 0.2s var(--ease-out), transform 0.15s var(--ease-out), box-shadow 0.2s var(--ease-out);
 }
 .btn-accent:hover {
   filter: brightness(1.06);
@@ -97,7 +120,7 @@ h1, h2, h3, .font-display {
   border: 1px solid var(--color-rim);
   color: var(--color-txt-1);
   border-radius: 9999px;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 .btn-ghost:hover {
   background: rgb(255 255 255 / 0.06);
@@ -124,7 +147,7 @@ h1, h2, h3, .font-display {
 
   --color-txt-1: #16181a;   /* Основной текст — почти чёрный */
   --color-txt-2: #4f555c;   /* Вторичный */
-  --color-txt-3: #8a9096;   /* Замолчавший */
+  --color-txt-3: #686e75;   /* Замолчавший */
 
   --color-rim:        rgb(0 0 0 / 0.08);
   --color-rim-accent: rgb(194 65 12 / 0.30);
@@ -169,3 +192,18 @@ h1, h2, h3, .font-display {
 
 [data-theme="light"] ::-webkit-scrollbar-track { background: #f6f7f2; }
 [data-theme="light"] ::-webkit-scrollbar-thumb { background: #d1d5db; }
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

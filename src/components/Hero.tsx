@@ -43,7 +43,7 @@ export default function Hero({ onScrollToTariffs, onScrollToEcosystem }: HeroPro
       />
 
       {/* ── Контент ── */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pb-16 pt-40 lg:py-32">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pb-10 pt-28 sm:pb-16 sm:pt-32 lg:py-32">
         <div className="max-w-2xl flex flex-col items-start">
           {/* Кикер */}
           <div className="inline-flex items-center gap-2.5 mb-5 sm:mb-7">
@@ -94,7 +94,7 @@ export default function Hero({ onScrollToTariffs, onScrollToEcosystem }: HeroPro
           </div>
 
           {/* Титулы-чипы под CTA */}
-          <div className="flex flex-wrap gap-2 mt-9 sm:mt-11">
+          <div className="flex flex-wrap gap-2 mt-6 sm:mt-11">
             {["3× Чемпион России", "10+ лет тренерства", "150+ учеников"].map((chip) => (
               <span
                 key={chip}

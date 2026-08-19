@@ -45,7 +45,7 @@ function VideoSlot({
       initial={{ opacity: 0, x: direction === "left" ? -30 : 30 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.7, delay: direction === "left" ? 0.15 : 0.25, ease: "easeOut" }}
+      transition={{ duration: 0.7, delay: direction === "left" ? 0.15 : 0.25, ease: [0.23, 1, 0.32, 1] }}
     >
       {/* Видеоплеер с тонировкой и бликом */}
       <div className="relative aspect-[4/3] overflow-hidden" style={{ background: "var(--color-card)" }}>
@@ -137,7 +137,7 @@ export default function UniversalTraining() {
           className="mb-12"
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
         >
           <h2 className="text-3xl sm:text-4xl font-bold leading-[1.15] max-w-2xl">
             Экспертный тренинг{" "}

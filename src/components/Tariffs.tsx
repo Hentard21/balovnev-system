@@ -12,6 +12,13 @@ interface Tariff {
   price: string;
   period?: string;
   cta: string;
+  product: "training" | "nutrition" | "coaching" | "competition";
+  offer:
+    | "training_plan"
+    | "training_video_review"
+    | "nutrition_plan"
+    | "online_coaching"
+    | "competition_key";
   featured?: boolean;
 }
 
@@ -25,12 +32,14 @@ const ONE_TIME_TARIFFS: Tariff[] = [
     forWhom:
       "Для тех, кто хочет тренироваться самостоятельно по чёткой системе, без личного сопровождения тренера.",
     perks: [
-      "Программа тренировок на 4 недели под твой уровень и цель",
+      "4 недели под снижение веса, набор массы, коррекцию фигуры или функциональную форму",
       "Подбор упражнений и нагрузки под доступный инвентарь",
       "Готовый план — занимаешься в своём темпе",
     ],
     price: "7 000 ₽",
     cta: "Заказать план",
+    product: "training",
+    offer: "training_plan",
   },
   {
     badge: "Разовая оплата",
@@ -46,6 +55,8 @@ const ONE_TIME_TARIFFS: Tariff[] = [
     ],
     price: "10 000 ₽",
     cta: "Заказать план",
+    product: "training",
+    offer: "training_video_review",
   },
   {
     badge: "Разовая оплата",
@@ -61,6 +72,8 @@ const ONE_TIME_TARIFFS: Tariff[] = [
     ],
     price: "7 000 ₽",
     cta: "Заказать план питания",
+    product: "nutrition",
+    offer: "nutrition_plan",
   },
 ];
 
@@ -81,6 +94,8 @@ const COACHING_TARIFFS: Tariff[] = [
     price: "11 000 ₽",
     period: "/ месяц",
     cta: "Оставить заявку",
+    product: "coaching",
+    offer: "online_coaching",
   },
   {
     badge: "Максимум сопровождения",
@@ -98,11 +113,24 @@ const COACHING_TARIFFS: Tariff[] = [
     price: "15 000 ₽",
     period: "/ месяц",
     cta: "Занять слот на подготовку",
+    product: "competition",
+    offer: "competition_key",
     featured: true,
   },
 ];
 
-function scrollToContact() {
+function scrollToContact(product: Tariff["product"], offer: Tariff["offer"]) {
+  const detail = { product, offer };
+  (
+    window as typeof window & {
+      __balovnevProductSelection?: typeof detail;
+    }
+  ).__balovnevProductSelection = detail;
+  window.dispatchEvent(
+    new CustomEvent("balovnev:select-product", {
+      detail,
+    }),
+  );
   document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -262,8 +290,9 @@ function TariffCard({ t }: { t: Tariff }) {
         </div>
 
         <button
-          onClick={scrollToContact}
-          className={`w-full px-5 py-3 rounded-xl text-sm font-semibold transition-all ${
+          type="button"
+          onClick={() => scrollToContact(t.product, t.offer)}
+          className={`min-h-11 w-full px-5 py-3 rounded-xl text-sm font-semibold transition-all ${
             t.featured ? "btn-accent" : "btn-ghost"
           }`}
         >
@@ -299,8 +328,13 @@ export default function Tariffs() {
             Тарифные планы
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold leading-[1.15]">
-            Выбери свой формат работы
+            Выберите подходящий формат работы
           </h2>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed sm:text-base" style={{ color: "var(--color-txt-2)" }}>
+            Тренировки и питание можно заказать отдельно. Если нужен контроль,
+            регулярные корректировки и обратная связь, выбирайте сопровождение —
+            окончательный формат Игорь подтвердит после анкеты.
+          </p>
         </div>
 
         {/* Разовые продукты */}

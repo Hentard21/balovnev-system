@@ -43,3 +43,7 @@ next-env.d.ts
 # local tooling — not part of the site
 /graphify-out
 /.claude/skills
+/.agents
+/concepts
+/media-prep
+/miniapp

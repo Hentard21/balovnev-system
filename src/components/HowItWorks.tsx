@@ -53,7 +53,7 @@ export default function HowItWorks() {
           className="mb-10 sm:mb-14"
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
         >
           <p
             className="text-xs font-semibold tracking-[0.18em] uppercase mb-3"
@@ -75,7 +75,7 @@ export default function HowItWorks() {
               className="glass-card rounded-2xl p-5 flex flex-col gap-3 relative overflow-hidden"
               initial={{ opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.15 + i * 0.1, ease: "easeOut" }}
+              transition={{ duration: 0.5, delay: 0.15 + i * 0.1, ease: [0.23, 1, 0.32, 1] }}
             >
               {/* Номер */}
               <span

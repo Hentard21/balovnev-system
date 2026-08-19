@@ -107,7 +107,7 @@ export default function Gallery() {
               transition={{
                 duration: 0.5,
                 delay: idx * 0.08,
-                ease: "easeOut",
+                ease: [0.23, 1, 0.32, 1],
               }}
               whileHover={{ scale: 1.02 }}
             >

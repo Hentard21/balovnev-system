@@ -5,8 +5,9 @@ import { useState, useEffect } from "react";
 // ─── Пункты меню (якоря секций главной страницы) ─────────────────────────────
 const NAV_ITEMS = [
   { id: "about", label: "О наставнике" },
-  { id: "ecosystem", label: "Экосистема" },
-  { id: "testimonials", label: "Отзывы" },
+  { id: "achievements", label: "Достижения" },
+  { id: "directions", label: "Направления" },
+  { id: "testimonials", label: "Результаты" },
   { id: "tariffs", label: "Тарифы" },
   { id: "faq", label: "FAQ" },
 ];
@@ -29,7 +30,9 @@ export default function Navbar() {
 
   const handleNav = (id: string) => {
     setMenuOpen(false);
-    scrollTo(id);
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => scrollTo(id));
+    });
   };
 
   return (
@@ -63,7 +66,7 @@ export default function Navbar() {
         </button>
 
         {/* Меню — десктоп */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-1">
           {NAV_ITEMS.map((item) => (
             <button
               key={item.id}
@@ -88,7 +91,7 @@ export default function Navbar() {
           {/* Бургер — мобильный */}
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="md:hidden w-9 h-9 rounded-lg flex items-center justify-center btn-ghost"
+            className="lg:hidden w-11 h-11 rounded-lg flex items-center justify-center btn-ghost"
             aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"}
             aria-expanded={menuOpen}
           >
@@ -106,7 +109,7 @@ export default function Navbar() {
       {/* Выпадающее мобильное меню */}
       {menuOpen && (
         <div
-          className="md:hidden border-t px-5 py-3 flex flex-col"
+          className="lg:hidden border-t px-5 py-3 flex flex-col"
           style={{
             background: "color-mix(in srgb, var(--color-deep) 94%, transparent)",
             backdropFilter: "blur(16px)",

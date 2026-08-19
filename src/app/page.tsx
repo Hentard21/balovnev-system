@@ -6,9 +6,11 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Stats from "@/components/Stats";
 import About from "@/components/About";
+import Achievements from "@/components/Achievements";
 import HowItWorks from "@/components/HowItWorks";
 import UniversalTraining from "@/components/UniversalTraining";
 import Ecosystem from "@/components/Ecosystem";
+import ProgramDirections from "@/components/ProgramDirections";
 import Gallery from "@/components/Gallery";
 import Testimonials from "@/components/Testimonials";
 import Tariffs from "@/components/Tariffs";
@@ -43,6 +45,9 @@ export default function Home() {
       {/* О наставнике */}
       <About />
 
+      {/* Подтверждённые награды и дипломы */}
+      <Achievements />
+
       {/* Как проходит работа */}
       <HowItWorks />
 
@@ -51,6 +56,9 @@ export default function Home() {
 
       {/* ИИ-экосистема */}
       <Ecosystem />
+
+      {/* Направления тренировочных программ */}
+      <ProgramDirections />
 
       {/* Галерея */}
       <Gallery />

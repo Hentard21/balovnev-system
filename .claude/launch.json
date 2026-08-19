@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 3000
+    },
+    {
+      "name": "balovnev-miniapp-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "miniapp", "run", "dev", "--", "-p", "3001"],
+      "port": 3001
     }
   ]
 }

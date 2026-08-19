@@ -20,12 +20,12 @@ export function asset(path: string): string {
 export const SITE_URL = "https://balovnev-system.ru";
 
 // ─── Контакты и соцсети ──────────────────────────────────────────────────────
-// TODO: заменить все ссылки на реальные перед запуском.
+// Реальные ссылки Игоря. Пустая строка = канал не используется (скрывается).
 export const CONTACTS = {
-  telegram: "https://t.me/balovnev", // ← заменить на реальный username
-  instagram: "https://instagram.com/balovnev", // ← заменить
-  whatsapp: "https://wa.me/79000000000", // ← заменить на реальный номер
-  vk: "https://vk.com/balovnev", // ← заменить
+  telegram: "https://t.me/BalovnevFitness",
+  instagram: "https://instagram.com/balovnev_fitness",
+  whatsapp: "", // WhatsApp у тренера нет — ссылка скрыта
+  vk: "https://vk.com/id430514648",
 };
 
 // ─── Приём заявок с формы ────────────────────────────────────────────────────

@@ -16,7 +16,8 @@ Prisma + SQLite. База физически хранится на диске с
 ```bash
 npm install
 cp .env.example .env
-npm run prisma:migrate   # создаёт data/miniapp.db и таблицы
+npm run prisma:migrate   # создаёт data/miniapp.db и таблицы (путь задаётся
+                         # в .env как file:../data/miniapp.db — см. комментарий там)
 npm run dev
 ```
 

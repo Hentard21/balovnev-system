@@ -158,6 +158,67 @@ function buildMessage(lead) {
     : message;
 }
 
+/**
+ * Отправка в Telegram с ретраями.
+ *
+ * Наблюдение с боевых замеров: успешный вызов api.telegram.org из Yandex
+ * Cloud Functions укладывается в 0.5–0.9 с, а неудачный не отвечает вообще
+ * и висит до потолка таймаута функции. Похоже на глухие маршруты до части
+ * IP-адресов Telegram: повезло с адресом — быстро, не повезло — тишина.
+ *
+ * Поэтому не ждём одну попытку до конца, а обрываем её по ATTEMPT_TIMEOUT_MS
+ * и пробуем снова: новая попытка может лечь на другой адрес. Три попытки по
+ * 2.8 с укладываются в лимит функции (10 с) с запасом на остальную работу.
+ *
+ * Ошибки самого Telegram (4xx — неверный токен, chat not found) не ретраим:
+ * они не про сеть и повтор их не исправит.
+ */
+const ATTEMPT_TIMEOUT_MS = 2800;
+const MAX_ATTEMPTS = 3;
+
+async function sendToTelegram(token, payload) {
+  let lastNetworkError = null;
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const startedAt = Date.now();
+    try {
+      const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(ATTEMPT_TIMEOUT_MS),
+      });
+
+      if (response.ok) {
+        console.log(`telegram ok: попытка ${attempt}, ${Date.now() - startedAt}мс`);
+        return { ok: true };
+      }
+
+      const text = await response.text();
+      // 5xx у Telegram — временная проблема на их стороне, имеет смысл повторить.
+      if (response.status >= 500) {
+        lastNetworkError = `HTTP ${response.status}`;
+        console.warn(`telegram ${response.status}: попытка ${attempt}, повторяем`);
+        continue;
+      }
+
+      // 4xx — ошибка запроса, повтор не поможет. Тело не отдаём наружу: в нём
+      // может быть токен.
+      console.error(`telegram отказ ${response.status}: ${text}`);
+      return { ok: false, reason: "rejected" };
+    } catch (error) {
+      // Обрыв по таймауту попытки или сетевая ошибка — пробуем ещё раз.
+      lastNetworkError = error?.name === "TimeoutError" ? "timeout" : String(error?.message ?? error);
+      console.warn(
+        `telegram сеть: попытка ${attempt} не удалась за ${Date.now() - startedAt}мс (${lastNetworkError})`,
+      );
+    }
+  }
+
+  console.error(`telegram не доставлено за ${MAX_ATTEMPTS} попыток: ${lastNetworkError}`);
+  return { ok: false, reason: "unreachable" };
+}
+
 function corsHeaders(origin) {
   // Важно: при отсутствии заголовка Access-Control-Allow-Origin платформа
   // Yandex Cloud Functions сама подставляет "*" — молчание не значит запрет.
@@ -219,22 +280,16 @@ module.exports.handler = async (event) => {
     ? { inline_keyboard: [[{ text: "💬 Написать клиенту", url: `https://t.me/${username}` }]] }
     : undefined;
 
-  const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: buildMessage(lead),
-      parse_mode: "HTML",
-      link_preview_options: { is_disabled: true },
-      reply_markup,
-    }),
+  const result = await sendToTelegram(token, {
+    chat_id: chatId,
+    text: buildMessage(lead),
+    parse_mode: "HTML",
+    link_preview_options: { is_disabled: true },
+    reply_markup,
   });
 
-  if (!response.ok) {
-    // Тело ответа Telegram не отдаём наружу — в нём может быть токен.
-    console.error("telegram sendMessage failed", response.status, await response.text());
-    return json(502, { ok: false, error: "delivery_failed" }, origin);
+  if (!result.ok) {
+    return json(502, { ok: false, error: "delivery_failed", reason: result.reason }, origin);
   }
 
   return json(200, { ok: true }, origin);

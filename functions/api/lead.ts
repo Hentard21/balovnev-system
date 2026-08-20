@@ -103,11 +103,30 @@ function yearsLabel(age: number): string {
  * Telegram-username из поля контакта, если он там есть.
  * Нужен для кнопки «Написать клиенту»: бот не может написать человеку
  * первым, поэтому Игорь пишет со своего аккаунта по ссылке t.me/<username>.
+ *
+ * Клиенты пишут это поле как угодно, поэтому разбираем все живые формы:
+ * ссылку (t.me/user, https://telegram.me/user?start=1), @user и голый
+ * username. Номер телефона сюда не попадает — username по правилам
+ * Telegram начинается с буквы.
  */
 function telegramUsername(contact: string | undefined): string | null {
   if (!contact) return null;
-  const match = contact.trim().match(/^@?([A-Za-z0-9_]{5,32})$/);
-  return match ? match[1] : null;
+  const value = contact.trim();
+
+  // 1. Ссылка в любом написании, возможно посреди текста.
+  const link = value.match(
+    /(?:https?:\/\/)?(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/([A-Za-z][A-Za-z0-9_]{4,31})/i,
+  );
+  if (link) return link[1];
+
+  // 2. @username — тоже может стоять внутри фразы вроде «тг @user, звонить после 18».
+  const handle = value.match(/@([A-Za-z][A-Za-z0-9_]{4,31})/);
+  if (handle) return handle[1];
+
+  // 3. Голый username — только если это всё содержимое поля, иначе легко
+  //    принять за него случайное слово из комментария.
+  const bare = value.match(/^([A-Za-z][A-Za-z0-9_]{4,31})$/);
+  return bare ? bare[1] : null;
 }
 
 function buildMessage(lead: LeadPayload): string {

@@ -318,7 +318,7 @@ export default function ContactForm() {
         nextErrors.age = "Анкета доступна совершеннолетним от 18 до 100 лет.";
       }
 
-      if (!form.contact.trim()) nextErrors.contact = "Укажите телефон или Telegram.";
+      if (!form.contact.trim()) nextErrors.contact = "Укажите Telegram или телефон для связи.";
 
       const height = Number(form.height);
       if (!form.height.trim()) nextErrors.height = "Укажите рост.";
@@ -618,7 +618,7 @@ export default function ContactForm() {
                   Анкета предназначена для совершеннолетних клиентов. Эти данные нужны для первичной оценки нагрузки и питания.
                 </p>
 
-                <div className="flex flex-col gap-1.5 sm:col-span-2">
+                <div className="flex flex-col gap-1.5">
                   <label htmlFor="name" className="text-xs font-medium" style={{ color: "var(--color-txt-2)" }}>Имя</label>
                   <input id="name" name="name" autoComplete="name" value={form.name} onChange={(event) => updateField("name", event.target.value)} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "name-error" : undefined} className={inputClass} style={inputStyle} placeholder="Алексей" />
                   <FieldError id="name-error" message={errors.name} />
@@ -630,9 +630,25 @@ export default function ContactForm() {
                   <FieldError id="age-error" message={errors.age} />
                 </div>
 
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="contact" className="text-xs font-medium" style={{ color: "var(--color-txt-2)" }}>Телефон или Telegram</label>
-                  <input id="contact" name="contact" type="text" autoComplete="tel" value={form.contact} onChange={(event) => updateField("contact", event.target.value)} aria-invalid={Boolean(errors.contact)} aria-describedby={errors.contact ? "contact-error" : undefined} className={inputClass} style={inputStyle} placeholder="+7 900 000 00 00 или @username" />
+                <div className="flex flex-col gap-1.5 sm:col-span-2">
+                  <label htmlFor="contact" className="text-xs font-medium" style={{ color: "var(--color-txt-2)" }}>Ваш Telegram</label>
+                  <input
+                    id="contact"
+                    name="contact"
+                    type="text"
+                    autoComplete="off"
+                    value={form.contact}
+                    onChange={(event) => updateField("contact", event.target.value)}
+                    aria-invalid={Boolean(errors.contact)}
+                    aria-describedby={errors.contact ? "contact-hint contact-error" : "contact-hint"}
+                    className={inputClass}
+                    style={inputStyle}
+                    placeholder="@username или t.me/username"
+                  />
+                  <p id="contact-hint" className="text-xs" style={{ color: "var(--color-txt-3)" }}>
+                    Оставьте ссылку на свой Telegram или @username — так Игорь ответит быстрее всего.
+                    Если вы не пользуетесь Telegram, напишите номер телефона и удобное время для звонка.
+                  </p>
                   <FieldError id="contact-error" message={errors.contact} />
                 </div>
 

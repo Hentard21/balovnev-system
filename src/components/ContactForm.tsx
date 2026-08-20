@@ -3,7 +3,8 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import SocialLinks from "./SocialLinks";
-import { CONTACTS, FORM_ENDPOINT, FORM_ENDPOINT_FALLBACK } from "@/lib/config";
+import { CONTACTS, FORM_ENDPOINT_FALLBACK, TELEGRAM_BOT_TOKEN } from "@/lib/config";
+import { sendLeadToTelegram } from "@/lib/lead-telegram";
 
 type Goal =
   | ""
@@ -416,7 +417,9 @@ export default function ContactForm() {
 
     if (loading) return;
 
-    if (!FORM_ENDPOINT) {
+    // Ни одного канала доставки не настроено — показываем прямую связь
+    // вместо ложного «отправлено».
+    if (!TELEGRAM_BOT_TOKEN && !FORM_ENDPOINT_FALLBACK) {
       setSendUnavailable(true);
       return;
     }
@@ -491,14 +494,12 @@ export default function ContactForm() {
 
     setLoading(true);
     try {
-      // Основной путь — свой обработчик: заявка приходит тренеру в Telegram.
-      // Он есть не везде: на хостинге без серверных функций (GitHub Pages)
-      // POST на /api/lead вернёт 405, а при недоступности хостинга запрос
-      // упадёт целиком. Заявка при этом не должна теряться, поэтому есть
-      // запасной канал на почту — он живёт на другой инфраструктуре, так что
-      // одновременный отказ обоих маловероятен.
+      // Основной путь — Telegram напрямую из браузера клиента: так заявка
+      // минует серверный обработчик, чья сеть до api.telegram.org оказалась
+      // ненадёжной. Если не прошло (Telegram недоступен у клиента, бот забанен,
+      // нет сети) — уходим на почту, чтобы заявка не потерялась.
       try {
-        await send(FORM_ENDPOINT);
+        await sendLeadToTelegram(payload);
       } catch {
         if (!FORM_ENDPOINT_FALLBACK) throw new Error("no_fallback");
         await send(FORM_ENDPOINT_FALLBACK);

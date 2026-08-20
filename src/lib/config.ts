@@ -29,13 +29,17 @@ export const CONTACTS = {
 };
 
 // ─── Приём заявок с формы ────────────────────────────────────────────────────
-// Сайт статический (GitHub Pages), поэтому форме нужен внешний endpoint.
-// Варианты (любой из):
-//   1. Вебхук вашего Telegram-бота (Cloudflare Worker / VPS), принимающий
-//      POST JSON {name, contact, goal} и пересылающий сообщение тренеру.
-//   2. Formspree/Formcarry: создайте форму и вставьте их URL сюда.
-// Пока endpoint пустой — форма показывает кнопки прямой связи (Telegram/WhatsApp).
-export const FORM_ENDPOINT = "https://formspree.io/f/xppakqry";
+// Свой обработчик на том же домене: functions/api/lead.ts (Cloudflare Pages
+// Function). Он присылает карточку заявки тренеру в Telegram — хранилища нет,
+// входящие заявки это переписка с ботом.
+//
+// Токен бота и chat id тренера лежат в переменных окружения проекта Pages
+// (Settings → Variables and secrets), в репозиторий они не попадают.
+//
+// Путь относительный: запрос идёт на тот же origin, поэтому CORS не нужен.
+// Если обработчик придётся временно отключить, сюда можно вернуть адрес
+// Formspree — формат payload у формы не менялся: https://formspree.io/f/xppakqry
+export const FORM_ENDPOINT = "/api/lead";
 
 // ─── Аналитика ───────────────────────────────────────────────────────────────
 // TODO: создайте счётчик на https://metrika.yandex.ru и впишите его номер.

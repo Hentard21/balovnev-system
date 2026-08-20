@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Дизайн-система mini app — та же палитра, что и на сайте:
+   Carbon / Energy Orange. Общая система с balovnev-system.ru,
+   чтобы клиент узнавал бренд, переходя из сайта в Telegram.
+   ============================================================ */
+
+@theme inline {
+  --color-deep:    #0b0d10;
+  --color-surface: #101114;
+  --color-card:    #16181c;
+
+  --color-accent:       #f97316;
+  --color-accent-light: #fb923c;
+  --color-accent-dim:   rgb(249 115 22 / 0.08);
+
+  --color-txt-1: #f4f5f0;
+  --color-txt-2: #9ba0a6;
+  --color-txt-3: #7d848b;
+
+  --color-rim:        rgb(255 255 255 / 0.08);
+  --color-rim-accent:  rgb(249 115 22 / 0.28);
+
+  --color-good:  #22c55e;
+  --color-warn:  #eab308;
+  --color-bad:   #ef4444;
+
+  --font-sans: var(--font-body);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Telegram WebApp безопасные зоны (шторка/системные жесты) */
+  height: 100%;
+}
+
+body {
+  background: var(--color-deep);
+  color: var(--color-txt-1);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100dvh;
+  overscroll-behavior-y: contain;
+}
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+  letter-spacing: 0.005em;
+  font-weight: 700;
+}
+
+.glass-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-rim);
+}
+
+/* Кастомный range-слайдер (вода) в стиле акцента */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-rim);
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -7px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  border: 3px solid var(--color-deep);
+  box-shadow: 0 0 0 1px var(--color-rim-accent);
+}

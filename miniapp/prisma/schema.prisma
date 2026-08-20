@@ -1,0 +1,60 @@
+// БД физически живёт на диске VPS (файл data/miniapp.db) — требование
+// локализации персональных данных граждан РФ (ст. 18 ч. 5 152-ФЗ), т.к.
+// среди полей есть данные о здоровье (самочувствие, БАДы/анаболики, фото).
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  TRAINER
+}
+
+enum Wellbeing {
+  GREAT
+  GOOD
+  OK
+  BAD
+  TERRIBLE
+}
+
+model User {
+  id           String        @id @default(cuid())
+  telegramId   String        @unique
+  firstName    String
+  lastName     String?
+  username     String?
+  photoUrl     String?
+  role         Role          @default(CLIENT)
+  createdAt    DateTime      @default(now())
+  measurements Measurement[]
+}
+
+model Measurement {
+  id          String     @id @default(cuid())
+  clientId    String
+  client      User       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  weightKg    Float?
+  waterMl     Int?
+  wellbeing   Wellbeing?
+  supplements String? // JSON-массив строк (БАДы)
+  anabolics   String? // JSON-массив строк, поле опционально для заполнения клиентом
+  note        String?
+  createdAt   DateTime   @default(now())
+  photos      Photo[]
+
+  @@index([clientId, createdAt])
+}
+
+model Photo {
+  id            String      @id @default(cuid())
+  measurementId String
+  measurement   Measurement @relation(fields: [measurementId], references: [id], onDelete: Cascade)
+  path          String // относительный путь внутри uploads/
+  createdAt     DateTime    @default(now())
+}

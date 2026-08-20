@@ -1,0 +1,28 @@
+/node_modules
+/.next/
+/out/
+/build
+
+# локальная БД и загруженные фото — не в git.
+# Prisma резолвит относительный путь из DATABASE_URL относительно папки
+# со schema.prisma, поэтому файл БД реально ложится в prisma/data/,
+# а не в /data/ — закрываем оба пути.
+/data/*.db
+/data/*.db-journal
+/prisma/data/
+/uploads/*
+!/uploads/.gitkeep
+
+.env
+.env.local
+
+# артефакты ручного тестирования: cookies.txt хранит подписанную
+# сессионную куку, gif-заглушки — мусор от проверки загрузки фото
+cookies.txt
+*.gif
+
+.DS_Store
+*.pem
+npm-debug.log*
+*.tsbuildinfo
+next-env.d.ts

@@ -1,0 +1,13 @@
+services:
+  miniapp:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      # БД и фото — на диске этого VPS (в РФ), не в образе. Требование
+      # локализации персональных данных, см. README.
+      - ./data:/app/data
+      - ./uploads:/app/uploads

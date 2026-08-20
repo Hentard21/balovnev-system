@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import SocialLinks from "./SocialLinks";
-import { CONTACTS, FORM_ENDPOINT } from "@/lib/config";
+import { CONTACTS, FORM_ENDPOINT, FORM_ENDPOINT_FALLBACK } from "@/lib/config";
 
 type Goal =
   | ""
@@ -476,9 +476,8 @@ export default function ContactForm() {
       },
     };
 
-    setLoading(true);
-    try {
-      const response = await fetch(FORM_ENDPOINT, {
+    const send = async (endpoint: string) => {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -488,6 +487,22 @@ export default function ContactForm() {
         body: JSON.stringify(payload),
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    };
+
+    setLoading(true);
+    try {
+      // Основной путь — свой обработчик: заявка приходит тренеру в Telegram.
+      // Он есть не везде: на хостинге без серверных функций (GitHub Pages)
+      // POST на /api/lead вернёт 405, а при недоступности хостинга запрос
+      // упадёт целиком. Заявка при этом не должна теряться, поэтому есть
+      // запасной канал на почту — он живёт на другой инфраструктуре, так что
+      // одновременный отказ обоих маловероятен.
+      try {
+        await send(FORM_ENDPOINT);
+      } catch {
+        if (!FORM_ENDPOINT_FALLBACK) throw new Error("no_fallback");
+        await send(FORM_ENDPOINT_FALLBACK);
+      }
       setSubmitted(true);
     } catch {
       setSendUnavailable(true);

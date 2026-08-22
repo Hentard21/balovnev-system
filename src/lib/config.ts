@@ -44,7 +44,7 @@ export const CONTACTS = {
 // анкеты клиентов и нельзя писать никому, кроме тех, кто сам нажал у бота
 // Start. Мини-аппу нужен ОТДЕЛЬНЫЙ бот — этому расширять полномочия нельзя.
 // Скомпрометируют — /revoke у @BotFather и новый токен сюда.
-export const TELEGRAM_BOT_TOKEN = "7753176190:AAGPG9C2U4v36yYGsFNjARbGnCMU4Ol41EE";
+export const TELEGRAM_BOT_TOKEN = "7753176190:AAFMxFusiq0D0Eewerb9VGh3IhgCGes1c8k";
 
 // Telegram id тренера (@balovnev_igor). Он должен был хотя бы раз нажать
 // Start у бота — иначе Telegram откажет с «chat not found».

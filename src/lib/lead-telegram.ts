@@ -23,7 +23,7 @@
 // Из этого следует ограничение: этому боту нельзя выдавать другие функции.
 // ═════════════════════════════════════════════════════════════════════════════
 
-import { TELEGRAM_BOT_TOKEN, TRAINER_CHAT_ID } from "@/lib/config";
+import { CONTACTS, TELEGRAM_BOT_TOKEN, TRAINER_CHAT_ID } from "@/lib/config";
 
 // ─── Формат анкеты ───────────────────────────────────────────────────────────
 // Совпадает с payload, который собирает ContactForm. Поля необязательные:
@@ -214,6 +214,53 @@ export function buildMessage(lead: LeadPayload): string {
   return message.length > MAX_MESSAGE
     ? `${message.slice(0, MAX_MESSAGE)}\n\n…анкета обрезана, полный текст в почте`
     : message;
+}
+
+/**
+ * Короткий текст заявки для ссылки «отправить самому» — клиент открывает чат
+ * с тренером, где сообщение уже подставлено, и жмёт «отправить».
+ *
+ * Зачем короткий: текст едет внутри URL, а длина ссылки ограничена и
+ * браузером, и Telegram. Полная анкета туда не влезет — она в любом случае
+ * уходит на почту, поэтому здесь только то, что нужно для начала разговора:
+ * кто, с какой целью и как связаться.
+ *
+ * Без HTML — это обычное сообщение от человека, а не карточка от бота.
+ */
+export function buildShortLeadText(lead: LeadPayload): string {
+  const { applicant, selection, preliminaryRecommendation } = lead;
+  const parts: string[] = ["Здравствуйте! Заполнил(а) анкету на сайте."];
+
+  const who: string[] = [];
+  if (applicant?.name?.trim()) who.push(applicant.name.trim());
+  if (typeof applicant?.age === "number") who.push(yearsLabel(applicant.age));
+  const params: string[] = [];
+  if (typeof applicant?.heightCm === "number") params.push(`${applicant.heightCm} см`);
+  if (typeof applicant?.weightKg === "number") params.push(`${applicant.weightKg} кг`);
+  if (params.length) who.push(params.join(", "));
+  if (who.length) parts.push(who.join(", "));
+
+  const goal = selection?.goal?.label;
+  const product = selection?.product?.label;
+  if (goal) parts.push(`Цель: ${goal}`);
+  if (product) parts.push(`Формат: ${product}`);
+
+  const recommendation = preliminaryRecommendation?.title;
+  if (recommendation) parts.push(`Анкета предложила: ${recommendation}`);
+
+  parts.push("Подробные ответы отправлены вместе с анкетой.");
+  return parts.join("\n");
+}
+
+/**
+ * Ссылка, открывающая чат с тренером с уже готовым текстом заявки.
+ * Токен и бот тут не участвуют вовсе: сообщение отправляет сам клиент со
+ * своего аккаунта. Побочный плюс — тренер сможет ответить сразу, тогда как
+ * боту Telegram запрещает писать человеку первым.
+ */
+export function buildTrainerChatLink(lead: LeadPayload): string {
+  const username = CONTACTS.telegram.replace(/^https?:\/\/t\.me\//, "").replace(/\/$/, "");
+  return `https://t.me/${username}?text=${encodeURIComponent(buildShortLeadText(lead))}`;
 }
 
 /**

@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import SocialLinks from "./SocialLinks";
 import { CONTACTS, FORM_ENDPOINT_FALLBACK, TELEGRAM_BOT_TOKEN } from "@/lib/config";
-import { sendLeadToTelegram } from "@/lib/lead-telegram";
+import { buildTrainerChatLink, sendLeadToTelegram } from "@/lib/lead-telegram";
 
 type Goal =
   | ""
@@ -173,6 +173,9 @@ export default function ContactForm() {
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
+  // Ссылка на чат с тренером с уже подставленным текстом заявки. Собирается
+  // при отправке, потому что после успеха форма размонтируется вместе с ответами.
+  const [trainerChatLink, setTrainerChatLink] = useState("");
   const [sendUnavailable, setSendUnavailable] = useState(false);
   const [loading, setLoading] = useState(false);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
@@ -504,6 +507,7 @@ export default function ContactForm() {
         if (!FORM_ENDPOINT_FALLBACK) throw new Error("no_fallback");
         await send(FORM_ENDPOINT_FALLBACK);
       }
+      setTrainerChatLink(buildTrainerChatLink(payload));
       setSubmitted(true);
     } catch {
       setSendUnavailable(true);
@@ -562,8 +566,28 @@ export default function ContactForm() {
             </div>
             <h3 className="text-xl font-semibold">Анкета отправлена</h3>
             <p className="max-w-md text-sm" style={{ color: "var(--color-txt-2)" }}>
-              Игорь или его команда изучат ответы и свяжутся с вами, чтобы уточнить детали и предложить следующий шаг.
+              Игорь изучит ответы и свяжется с вами, чтобы уточнить детали и предложить следующий шаг.
             </p>
+
+            {/* Необязательный шаг, который заметно ускоряет ответ: клиент пишет
+                Игорю сам, со своего аккаунта. Telegram запрещает боту писать
+                человеку первым, поэтому иначе первый шаг всегда за тренером. */}
+            {trainerChatLink && (
+              <div className="mt-2 flex flex-col items-center gap-2">
+                <p className="max-w-md text-sm" style={{ color: "var(--color-txt-2)" }}>
+                  Хотите ответ быстрее? Напишите Игорю — текст заявки уже готов,
+                  останется нажать «отправить».
+                </p>
+                <a
+                  href={trainerChatLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-accent inline-flex min-h-11 items-center rounded-xl px-6 py-3 text-sm font-semibold"
+                >
+                  Написать Игорю в Telegram
+                </a>
+              </div>
+            )}
           </div>
         ) : sendUnavailable ? (
           <div className="glass-card flex flex-col items-center gap-4 rounded-2xl p-8 text-center sm:p-10" role="alert">

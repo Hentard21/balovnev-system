@@ -3,8 +3,8 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import SocialLinks from "./SocialLinks";
-import { CONTACTS, FORM_ENDPOINT_FALLBACK, TELEGRAM_BOT_TOKEN } from "@/lib/config";
-import { buildTrainerChatLink, sendLeadToTelegram } from "@/lib/lead-telegram";
+import { CONTACTS, FORM_ENDPOINT } from "@/lib/config";
+import { buildTrainerChatLink } from "@/lib/lead-telegram";
 
 type Goal =
   | ""
@@ -420,9 +420,9 @@ export default function ContactForm() {
 
     if (loading) return;
 
-    // Ни одного канала доставки не настроено — показываем прямую связь
-    // вместо ложного «отправлено».
-    if (!TELEGRAM_BOT_TOKEN && !FORM_ENDPOINT_FALLBACK) {
+    // Канал доставки не настроен — показываем прямую связь вместо ложного
+    // «отправлено».
+    if (!FORM_ENDPOINT) {
       setSendUnavailable(true);
       return;
     }
@@ -497,16 +497,9 @@ export default function ContactForm() {
 
     setLoading(true);
     try {
-      // Основной путь — Telegram напрямую из браузера клиента: так заявка
-      // минует серверный обработчик, чья сеть до api.telegram.org оказалась
-      // ненадёжной. Если не прошло (Telegram недоступен у клиента, бот забанен,
-      // нет сети) — уходим на почту, чтобы заявка не потерялась.
-      try {
-        await sendLeadToTelegram(payload);
-      } catch {
-        if (!FORM_ENDPOINT_FALLBACK) throw new Error("no_fallback");
-        await send(FORM_ENDPOINT_FALLBACK);
-      }
+      // Анкета целиком уходит на почту. В Telegram заявку отправит сам клиент
+      // кнопкой на экране успеха — ссылку готовим здесь, пока ответы под рукой.
+      await send(FORM_ENDPOINT);
       setTrainerChatLink(buildTrainerChatLink(payload));
       setSubmitted(true);
     } catch {
